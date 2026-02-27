@@ -1,45 +1,48 @@
-# Nexus Chat | Real-time WebSocket Demo
+# Connect | Real-time Messaging Matrix
 
-A premium, real-time chat application demonstrating the power of WebSockets using **FastAPI** and **Vanilla CSS**.
+**Connect** is a premium, multi-user WebSocket demonstration featuring a high-concurrency "Matrix View". It simulates 4 independent users in a single dashboard, showing complex room isolation, private messaging, and Slack-style navigation.
 
-![Nexus Chat Screenshot](./static/preview.png)
+![Connect Screenshot](./static/preview.png)
 
-## 🚀 Features
+## 🚀 Key Features
 
-- **Real-time Synchronization**: Messages are broadcasted instantly to all connected clients using WebSockets.
-- **Dual User Interface**: A split-screen view to simulate two users interacting in real-time.
-- **Modern Aesthetics**: Glassmorphism design with sleek gradients and smooth animations.
-- **Fast & Lightweight**: Built with FastAPI for high performance and minimal overhead.
+- **Matrix Dashboard**: View 4 concurrent active users (Alpha, Bravo, Charlie, Delta) interacting in real-time on one screen.
+- **Smart Room Isolation**:
+  - `# Friends` Channel: Shared space for Alpha, Bravo, and Charlie.
+  - `@ Direct Messages`: Private 1-on-1 channels (e.g., A ↔ B, C ↔ D) with strict cryptographic-like isolation.
+- **Slack-Style UI**: A sleek left-sidebar navigation for each user to switch between public channels and private DMs.
+- **Access Control**: Dynamic membership logic (e.g., Delta is restricted from the `# Friends` channel).
+- **Glassmorphism Design**: High-end dark mode aesthetics with blur effects, gradients, and micro-animations.
 
 ## 🛠️ Tech Stack
 
-- **Backend**: Python, FastAPI, WebSockets (`websockets` library).
-- **Frontend**: HTML5, Vanilla CSS3, JavaScript (ES6+).
-- **Containerization**: Docker & Docker Compose.
+- **Backend**: Python 3.14+, FastAPI, WebSockets (`json` protocol).
+- **Frontend**: HTML5, Vanilla CSS (Modern Grid/Flexbox), JavaScript (ES6+).
+- **Orchestration**: Docker & Docker Compose for instant deployment.
 
 ## 🏃 Running Locally
 
-### Option 1: Using Python (Native)
-1. Initialize virtual environment:
+### Option 1: Docker (Recommended) 🐳
+The fastest way to spin up the matrix:
+```bash
+docker compose up --build
+```
+Access the dashboard at [http://localhost:8001](http://localhost:8001)
+
+### Option 2: Python Native
+1. Initialize environment:
    ```bash
    python3 -m venv venv
    source venv/bin/activate
    pip install -r requirements.txt
    ```
-2. Start the server:
+2. Run the server:
    ```bash
-   uvicorn main:app --reload --host 0.0.0.0 --port 8000
+   uvicorn main:app --reload --host 0.0.0.0 --port 8001
    ```
 
-### Option 2: Using Docker 🐳
-Run the entire app in a containerized environment:
-```bash
-docker compose up --build
-```
-Access the app at [http://localhost:8000](http://localhost:8000)
-
 ## 📂 Project Structure
-- `main.py`: FastAPI backend and WebSocket logic.
-- `static/`: Contains HTML, CSS, and JS assets.
-- `Dockerfile`: Container configuration.
-- `docker-compose.yml`: Multi-container orchestration.
+- `main.py`: The heart of the app—manages room logic and multi-user broadcasting.
+- `static/index.html`: The 4-user Matrix layout.
+- `static/script.js`: Client-side routing for multi-subscriptions.
+- `static/style.css`: Premium dark mode styling and sidebar layout.

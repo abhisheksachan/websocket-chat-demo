@@ -1,68 +1,110 @@
-// WebSocket connections for both users
-let ws1, ws2;
+/**
+ * Connect - Multi-User Messaging Logic
+ * Handles 4 concurrent users in a dashboard view
+ */
 
-function connect(userId) {
+const userSockets = {};
+const activeRooms = {
+    'A': 'Friends',
+    'B': 'Friends',
+    'C': 'Friends',
+    'D': 'Private_CD'
+};
+
+function init() {
+    ['A', 'B', 'C', 'D'].forEach(userId => {
+        connectUser(userId);
+    });
+}
+
+function connectUser(userId) {
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = window.location.host;
     const ws = new WebSocket(`${protocol}//${host}/ws/${userId}`);
 
+    ws.onopen = () => {
+        document.getElementById(`app-${userId}`).querySelectorAll('.dot').forEach(d => d.classList.add('online'));
+        console.log(`User ${userId} active.`);
+    };
+
     ws.onmessage = (event) => {
         const data = JSON.parse(event.data);
-        displayMessage(data, userId);
+        routeMessage(userId, data);
     };
 
     ws.onclose = () => {
-        console.log(`Connection closed for User ${userId}. Reconnecting...`);
-        setTimeout(() => connect(userId), 2000);
+        document.getElementById(`app-${userId}`).querySelectorAll('.dot').forEach(d => d.classList.remove('online'));
+        setTimeout(() => connectUser(userId), 3000);
     };
 
-    return ws;
+    userSockets[userId] = ws;
 }
 
-// Initial connections
-ws1 = connect(1);
-ws2 = connect(2);
+function routeMessage(observerId, data) {
+    const { sender_id, sender_name, room_id, message } = data;
 
-function displayMessage(data, observerId) {
-    const messagesDiv = document.getElementById(`messages-${observerId}`);
-    const messageEl = document.createElement('div');
+    // Updated ID matching the new HTML structure: msgs-{userid}-{roomid}
+    const containerId = `msgs-${observerId}-${room_id}`;
+    const container = document.getElementById(containerId);
 
-    // Determine the type of message for the current observer
-    if (data.sender_id === "System") {
-        messageEl.className = 'message system';
-    } else if (data.sender_id === observerId) {
-        messageEl.className = 'message sent';
+    if (!container) return;
+
+    const msgEl = document.createElement('div');
+    msgEl.className = `message ${sender_id === observerId ? 'sent' : 'received'}`;
+
+    if (sender_id !== observerId) {
+        msgEl.innerHTML = `<div class="msg-meta">${sender_name}</div>${message}`;
     } else {
-        messageEl.className = 'message received';
+        msgEl.textContent = message;
     }
 
-    messageEl.textContent = data.message;
-    messagesDiv.appendChild(messageEl);
-
-    // Auto-scroll to bottom
-    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    container.appendChild(msgEl);
+    container.scrollTop = container.scrollHeight;
 }
 
 function sendMessage(userId) {
     const input = document.getElementById(`input-${userId}`);
-    const message = input.value.trim();
+    const text = input.value.trim();
+    const room = activeRooms[userId];
+    const ws = userSockets[userId];
 
-    if (message) {
-        const ws = (userId === 1) ? ws1 : ws2;
-        if (ws.readyState === WebSocket.OPEN) {
-            ws.send(message);
-            input.value = '';
-        } else {
-            alert('WebSocket is not connected. Please wait or refresh.');
-        }
+    if (text && ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({
+            room_id: room,
+            message: text
+        }));
+        input.value = '';
     }
 }
 
-// Handle Enter key for inputs
-document.getElementById('input-1').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage(1);
-});
+/**
+ * Switch Rooms within the sidebar
+ */
+function switchRoom(userId, roomId) {
+    activeRooms[userId] = roomId;
 
-document.getElementById('input-2').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') sendMessage(2);
-});
+    // Update sidebar nav items
+    const navItems = document.querySelectorAll(`.nav-item[data-user="${userId}"]`);
+    navItems.forEach(n => {
+        n.classList.toggle('active', n.getAttribute('data-room') === roomId);
+    });
+
+    // Update Header Text
+    const header = document.getElementById(`header-room-${userId}`);
+    header.textContent = roomId === 'Friends' ? '# Friends' : `@ ${roomId === 'Private_AB' ? (userId === 'A' ? 'Bravo' : 'Alpha') : (userId === 'C' ? 'Delta' : 'Charlie')}`;
+
+    // Toggle viewports
+    const viewports = document.querySelectorAll(`[id^="msgs-${userId}-"]`);
+    viewports.forEach(v => {
+        v.classList.toggle('hidden', v.id !== `msgs-${userId}-${roomId}`);
+    });
+}
+
+window.onload = () => {
+    init();
+    ['A', 'B', 'C', 'D'].forEach(id => {
+        document.getElementById(`input-${id}`).addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage(id);
+        });
+    });
+};

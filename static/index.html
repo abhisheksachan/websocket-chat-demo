@@ -1,57 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Chat | Real-time WebSockets</title>
+    <title>Connect | Real-time Messaging</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@400;600&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="background-blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
     </div>
 
-    <header>
-        <h1>Nexus<span>Chat</span></h1>
-        <p>Real-time WebSocket Demonstration</p>
+    <header class="main-header">
+        <h1>Con<span>nect</span></h1>
+        <p>A (v B) | C (v D) | A,B,C (Friends)</p>
     </header>
 
-    <main class="chat-container">
-        <!-- User 1 Interface -->
-        <section class="chat-window" id="user1">
-            <div class="chat-header">
-                <div class="status-indicator online"></div>
-                <h2>User One</h2>
+    <main class="matrix-container">
+        <!-- User Alpha (A) -->
+        <div class="user-app" id="app-A">
+            <div class="sidebar">
+                <div class="sidebar-top">
+                    <div class="dot online"></div>
+                    <span class="user-title">Alpha</span>
+                </div>
+                <div class="sidebar-list">
+                    <div class="list-label">Channels</div>
+                    <div class="nav-item active" data-user="A" data-room="Friends" onclick="switchRoom('A', 'Friends')">
+                        # Friends</div>
+                    <div class="list-label">Direct Messages</div>
+                    <div class="nav-item" data-user="A" data-room="Private_AB" onclick="switchRoom('A', 'Private_AB')">@
+                        Bravo</div>
+                </div>
             </div>
-            <div class="messages" id="messages-1"></div>
-            <div class="chat-input-area">
-                <input type="text" id="input-1" placeholder="Type a message..." autocomplete="off">
-                <button onclick="sendMessage(1)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                </button>
+            <div class="chat-area">
+                <div class="chat-header">
+                    <span id="header-room-A"># Friends</span>
+                </div>
+                <div class="msg-viewport" id="msgs-A-Friends"></div>
+                <div class="msg-viewport hidden" id="msgs-A-Private_AB"></div>
+                <div class="input-wrapper">
+                    <input type="text" id="input-A" placeholder="Message Alpha...">
+                </div>
             </div>
-        </section>
+        </div>
 
-        <!-- User 2 Interface -->
-        <section class="chat-window" id="user2">
-            <div class="chat-header">
-                <div class="status-indicator online"></div>
-                <h2>User Two</h2>
+        <!-- User Bravo (B) -->
+        <div class="user-app" id="app-B">
+            <div class="sidebar">
+                <div class="sidebar-top">
+                    <div class="dot online"></div>
+                    <span class="user-title">Bravo</span>
+                </div>
+                <div class="sidebar-list">
+                    <div class="list-label">Channels</div>
+                    <div class="nav-item active" data-user="B" data-room="Friends" onclick="switchRoom('B', 'Friends')">
+                        # Friends</div>
+                    <div class="list-label">Direct Messages</div>
+                    <div class="nav-item" data-user="B" data-room="Private_AB" onclick="switchRoom('B', 'Private_AB')">@
+                        Alpha</div>
+                </div>
             </div>
-            <div class="messages" id="messages-2"></div>
-            <div class="chat-input-area">
-                <input type="text" id="input-2" placeholder="Send a reply..." autocomplete="off">
-                <button onclick="sendMessage(2)">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-                </button>
+            <div class="chat-area">
+                <div class="chat-header">
+                    <span id="header-room-B"># Friends</span>
+                </div>
+                <div class="msg-viewport" id="msgs-B-Friends"></div>
+                <div class="msg-viewport hidden" id="msgs-B-Private_AB"></div>
+                <div class="input-wrapper">
+                    <input type="text" id="input-B" placeholder="Message Bravo...">
+                </div>
             </div>
-        </section>
+        </div>
+
+        <!-- User Charlie (C) -->
+        <div class="user-app" id="app-C">
+            <div class="sidebar">
+                <div class="sidebar-top">
+                    <div class="dot online"></div>
+                    <span class="user-title">Charlie</span>
+                </div>
+                <div class="sidebar-list">
+                    <div class="list-label">Channels</div>
+                    <div class="nav-item active" data-user="C" data-room="Friends" onclick="switchRoom('C', 'Friends')">
+                        # Friends</div>
+                    <div class="list-label">Direct Messages</div>
+                    <div class="nav-item" data-user="C" data-room="Private_CD" onclick="switchRoom('C', 'Private_CD')">@
+                        Delta</div>
+                </div>
+            </div>
+            <div class="chat-area">
+                <div class="chat-header">
+                    <span id="header-room-C"># Friends</span>
+                </div>
+                <div class="msg-viewport" id="msgs-C-Friends"></div>
+                <div class="msg-viewport hidden" id="msgs-C-Private_CD"></div>
+                <div class="input-wrapper">
+                    <input type="text" id="input-C" placeholder="Message Charlie...">
+                </div>
+            </div>
+        </div>
+
+        <!-- User Delta (D) -->
+        <div class="user-app" id="app-D">
+            <div class="sidebar">
+                <div class="sidebar-top">
+                    <div class="dot online"></div>
+                    <span class="user-title">Delta</span>
+                </div>
+                <div class="sidebar-list">
+                    <div class="list-label">Channels</div>
+                    <div class="nav-item disabled"># Friends (Locked)</div>
+                    <div class="list-label">Direct Messages</div>
+                    <div class="nav-item active" data-user="D" data-room="Private_CD"
+                        onclick="switchRoom('D', 'Private_CD')">@ Charlie</div>
+                </div>
+            </div>
+            <div class="chat-area">
+                <div class="chat-header">
+                    <span id="header-room-D">@ Charlie</span>
+                </div>
+                <div class="msg-viewport" id="msgs-D-Private_CD"></div>
+                <div class="input-wrapper">
+                    <input type="text" id="input-D" placeholder="Message Delta...">
+                </div>
+            </div>
+        </div>
     </main>
 
     <script src="/static/script.js"></script>
 </body>
+
 </html>

@@ -46,3 +46,6 @@ Access the dashboard at [http://localhost:8001](http://localhost:8001)
 - `static/index.html`: The 4-user Matrix layout.
 - `static/script.js`: Client-side routing for multi-subscriptions.
 - `static/style.css`: Premium dark mode styling and sidebar layout.
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

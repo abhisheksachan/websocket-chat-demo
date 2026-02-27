@@ -1,6 +1,6 @@
-# Connect | Real-time Messaging Matrix
+# Connect | Real-time Messenger APP
 
-**Connect** is a premium, multi-user WebSocket demonstration featuring a high-concurrency "Matrix View". It simulates 4 independent users in a single dashboard, showing complex room isolation, private messaging, and Slack-style navigation.
+**Connect** is a premium, multi-user WebSocket demonstration featuring a high-concurrency "Matrix View". It simulates 4 independent users in a single dashboard, showing complex room isolation, private messaging, and sidebar-based navigation.
 
 ![Connect Screenshot](./static/preview.png)
 
@@ -10,7 +10,7 @@
 - **Smart Room Isolation**:
   - `# Friends` Channel: Shared space for Alpha, Bravo, and Charlie.
   - `@ Direct Messages`: Private 1-on-1 channels (e.g., A ↔ B, C ↔ D) with strict cryptographic-like isolation.
-- **Slack-Style UI**: A sleek left-sidebar navigation for each user to switch between public channels and private DMs.
+- **Sidebar-Based UI**: A sleek left-sidebar navigation for each user to switch between public channels and private DMs.
 - **Access Control**: Dynamic membership logic (e.g., Delta is restricted from the `# Friends` channel).
 - **Glassmorphism Design**: High-end dark mode aesthetics with blur effects, gradients, and micro-animations.
 

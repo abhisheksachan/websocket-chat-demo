@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus Chat | Real-time WebSockets</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <header>
+        <h1>Nexus<span>Chat</span></h1>
+        <p>Real-time WebSocket Demonstration</p>
+    </header>
+
+    <main class="chat-container">
+        <!-- User 1 Interface -->
+        <section class="chat-window" id="user1">
+            <div class="chat-header">
+                <div class="status-indicator online"></div>
+                <h2>User One</h2>
+            </div>
+            <div class="messages" id="messages-1"></div>
+            <div class="chat-input-area">
+                <input type="text" id="input-1" placeholder="Type a message..." autocomplete="off">
+                <button onclick="sendMessage(1)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- User 2 Interface -->
+        <section class="chat-window" id="user2">
+            <div class="chat-header">
+                <div class="status-indicator online"></div>
+                <h2>User Two</h2>
+            </div>
+            <div class="messages" id="messages-2"></div>
+            <div class="chat-input-area">
+                <input type="text" id="input-2" placeholder="Send a reply..." autocomplete="off">
+                <button onclick="sendMessage(2)">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                </button>
+            </div>
+        </section>
+    </main>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -2,7 +2,7 @@
 
 A premium, real-time chat application demonstrating the power of WebSockets using **FastAPI** and **Vanilla CSS**.
 
-![Nexus Chat Screenshot](https://raw.githubusercontent.com/abhisheksachan/websocket-chat-demo/main/static/screenshot_preview.png)
+![Nexus Chat Screenshot](./static/preview.png)
 
 ## 🚀 Features
 
